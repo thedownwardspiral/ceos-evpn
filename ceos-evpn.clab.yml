@@ -1,0 +1,273 @@
+---
+name: ceos-evpn
+topology:
+  kinds:
+    ceos:
+      type: ceos
+      image: ceos:4.30.4M
+      env:
+        CLAB_MGMT_VRF: management
+  defaults:
+    kind: ceos
+    startup-config: init-configs/ceos-init.cfg
+    extras:
+      ceos-copy-to-flash:
+        - init-configs/cv-onboarding-token
+  nodes:
+    # DC01
+    # spines
+    dc01-spine-01:
+      group: spine
+      mgmt-ipv4: 172.20.20.2
+    dc01-spine-02:
+      group: spine
+      mgmt-ipv4: 172.20.20.3
+    dc01-spine-03:
+      group: spine
+      mgmt-ipv4: 172.20.20.4
+    dc01-spine-04:
+      group: spine
+      mgmt-ipv4: 172.20.20.5
+    # leafs
+    dc01-leaf-01a:
+      group: leaf
+      mgmt-ipv4: 172.20.20.6
+    dc01-leaf-01b:
+      group: leaf
+      mgmt-ipv4: 172.20.20.7
+    dc01-leaf-02a:
+      group: leaf
+      mgmt-ipv4: 172.20.20.8
+    dc01-leaf-02b:
+      group: leaf
+      mgmt-ipv4: 172.20.20.9
+    dc01-leaf-02c:
+      group: leaf
+      mgmt-ipv4: 172.20.20.10
+    dc01-leaf-02d:
+      group: leaf
+      mgmt-ipv4: 172.20.20.11
+    # border leafs
+    dc01-bsl-01a:
+      group: border-leaf
+      mgmt-ipv4: 172.20.20.12
+    dc01-bsl-01b:
+      group: border-leaf
+      mgmt-ipv4: 172.20.20.13
+    # vrf gateway switches
+    dc01-vrf-01:
+      group: dc-gw
+      mgmt-ipv4: 172.20.20.14
+    dc01-vrf-02:
+      group: dc-gw
+      mgmt-ipv4: 172.20.20.15
+    dc01-vrf-03:
+      group: dc-gw
+      mgmt-ipv4: 172.20.20.16
+    # external switches
+    dc01-ext-01:
+      group: dc-gw
+      mgmt-ipv4: 172.20.20.17
+    dc01-ext-02:
+      group: dc-gw
+      mgmt-ipv4: 172.20.20.18
+    dc01-ext-03:
+      group: server
+      mgmt-ipv4: 172.20.20.19
+
+    # DC02
+    # spines
+    dc02-spine-01:
+      group: spine
+      mgmt-ipv4: 172.20.20.20
+    dc02-spine-02:
+      group: spine
+      mgmt-ipv4: 172.20.20.21
+    dc02-spine-03:
+      group: spine
+      mgmt-ipv4: 172.20.20.22
+    dc02-spine-04:
+      group: spine
+      mgmt-ipv4: 172.20.20.23
+    # leafs
+    dc02-leaf-01a:
+      group: leaf
+      mgmt-ipv4: 172.20.20.24
+    dc02-leaf-01b:
+      group: leaf
+      mgmt-ipv4: 172.20.20.25
+    dc02-leaf-02a:
+      group: leaf
+      mgmt-ipv4: 172.20.20.26
+    dc02-leaf-02b:
+      group: leaf
+      mgmt-ipv4: 172.20.20.27
+    dc02-leaf-02c:
+      group: leaf
+      mgmt-ipv4: 172.20.20.28
+    dc02-leaf-02d:
+      group: leaf
+      mgmt-ipv4: 172.20.20.29
+    # border leafs
+    dc02-bsl-01a:
+      group: border-leaf
+      mgmt-ipv4: 172.20.20.30
+    dc02-bsl-01b:
+      group: border-leaf
+      mgmt-ipv4: 172.20.20.31
+    # vrf gateway switches
+    dc02-vrf-01:
+      group: dc-gw
+      mgmt-ipv4: 172.20.20.32
+    dc02-vrf-02:
+      group: dc-gw
+      mgmt-ipv4: 172.20.20.33
+    dc02-vrf-03:
+      group: dc-gw
+      mgmt-ipv4: 172.20.20.34
+    # external switches
+    dc02-ext-01:
+      group: dc-gw
+      mgmt-ipv4: 172.20.20.35
+    dc02-ext-02:
+      group: dc-gw
+      mgmt-ipv4: 172.20.20.36
+    dc02-ext-03:
+      group: server
+      mgmt-ipv4: 172.20.20.37
+
+  # LINKS
+  links:
+    # DC01
+    # MLAG Pair
+    - endpoints: ["dc01-leaf-01a:eth49", "dc01-leaf-01b:eth49"]
+    - endpoints: ["dc01-leaf-01a:eth50", "dc01-leaf-01b:eth50"]
+    - endpoints: ["dc01-spine-01:eth1", "dc01-leaf-01a:eth1"]
+    - endpoints: ["dc01-spine-02:eth1", "dc01-leaf-01a:eth2"]
+    - endpoints: ["dc01-spine-03:eth1", "dc01-leaf-01a:eth3"]
+    - endpoints: ["dc01-spine-04:eth1", "dc01-leaf-01a:eth4"]
+    - endpoints: ["dc01-spine-01:eth2", "dc01-leaf-01b:eth1"]
+    - endpoints: ["dc01-spine-02:eth2", "dc01-leaf-01b:eth2"]
+    - endpoints: ["dc01-spine-03:eth2", "dc01-leaf-01b:eth3"]
+    - endpoints: ["dc01-spine-04:eth2", "dc01-leaf-01b:eth4"]
+    # MLAG Pair
+    - endpoints: ["dc01-leaf-02a:eth49", "dc01-leaf-02b:eth49"]
+    - endpoints: ["dc01-leaf-02a:eth50", "dc01-leaf-02b:eth50"]
+    - endpoints: ["dc01-spine-01:eth3", "dc01-leaf-02a:eth1"]
+    - endpoints: ["dc01-spine-02:eth3", "dc01-leaf-02a:eth2"]
+    - endpoints: ["dc01-spine-03:eth3", "dc01-leaf-02a:eth3"]
+    - endpoints: ["dc01-spine-04:eth3", "dc01-leaf-02a:eth4"]
+    - endpoints: ["dc01-spine-01:eth4", "dc01-leaf-02b:eth1"]
+    - endpoints: ["dc01-spine-02:eth4", "dc01-leaf-02b:eth2"]
+    - endpoints: ["dc01-spine-03:eth4", "dc01-leaf-02b:eth3"]
+    - endpoints: ["dc01-spine-04:eth4", "dc01-leaf-02b:eth4"]
+    # MLAG Pair
+    - endpoints: ["dc01-bsl-01a:eth49", "dc01-bsl-01b:eth49"]
+    - endpoints: ["dc01-bsl-01a:eth50", "dc01-bsl-01b:eth50"]
+    - endpoints: ["dc01-spine-01:eth5", "dc01-bsl-01a:eth1"]
+    - endpoints: ["dc01-spine-02:eth5", "dc01-bsl-01a:eth2"]
+    - endpoints: ["dc01-spine-03:eth5", "dc01-bsl-01a:eth3"]
+    - endpoints: ["dc01-spine-04:eth5", "dc01-bsl-01a:eth4"]
+    - endpoints: ["dc01-spine-01:eth6", "dc01-bsl-01b:eth1"]
+    - endpoints: ["dc01-spine-02:eth6", "dc01-bsl-01b:eth2"]
+    - endpoints: ["dc01-spine-03:eth6", "dc01-bsl-01b:eth3"]
+    - endpoints: ["dc01-spine-04:eth6", "dc01-bsl-01b:eth4"]
+    # MLAG Pair
+    - endpoints: ["dc01-leaf-02c:eth49", "dc01-leaf-02d:eth49"]
+    - endpoints: ["dc01-leaf-02c:eth50", "dc01-leaf-02d:eth50"]
+    - endpoints: ["dc01-leaf-02a:eth47", "dc01-leaf-02c:eth47"]
+    - endpoints: ["dc01-leaf-02a:eth48", "dc01-leaf-02d:eth48"]
+    - endpoints: ["dc01-leaf-02b:eth47", "dc01-leaf-02d:eth47"]
+    - endpoints: ["dc01-leaf-02b:eth48", "dc01-leaf-02c:eth48"]
+    # VRF Switches
+    - endpoints: ["dc01-vrf-01:eth1", "dc01-bsl-01a:eth5"]
+    - endpoints: ["dc01-vrf-01:eth2", "dc01-bsl-01b:eth5"]
+    - endpoints: ["dc01-vrf-02:eth1", "dc01-bsl-01b:eth6"]
+    - endpoints: ["dc01-vrf-02:eth2", "dc01-bsl-01a:eth6"]
+    - endpoints: ["dc01-vrf-03:eth1", "dc01-bsl-01b:eth7"]
+    - endpoints: ["dc01-vrf-03:eth2", "dc01-bsl-01a:eth7"]
+    # External Switches
+    - endpoints: ["dc01-ext-01:eth49", "dc01-ext-02:eth49"]
+    - endpoints: ["dc01-ext-01:eth50", "dc01-ext-02:eth50"]
+    - endpoints: ["dc01-ext-01:eth1", "dc01-vrf-01:eth3"]
+    - endpoints: ["dc01-ext-02:eth1", "dc01-vrf-01:eth4"]
+    - endpoints: ["dc01-ext-01:eth2", "dc01-vrf-02:eth3"]
+    - endpoints: ["dc01-ext-02:eth2", "dc01-vrf-02:eth4"]
+    - endpoints: ["dc01-ext-01:eth3", "dc01-vrf-03:eth3"]
+    - endpoints: ["dc01-ext-02:eth3", "dc01-vrf-03:eth4"]
+    # Server Switches
+    - endpoints: ["dc01-ext-03:eth1", "dc01-ext-01:eth4"]
+    - endpoints: ["dc01-ext-03:eth2", "dc01-ext-02:eth4"]   
+
+    # dc02
+    # MLAG Pair
+    - endpoints: ["dc02-leaf-01a:eth49", "dc02-leaf-01b:eth49"]
+    - endpoints: ["dc02-leaf-01a:eth50", "dc02-leaf-01b:eth50"]
+    - endpoints: ["dc02-spine-01:eth1", "dc02-leaf-01a:eth1"]
+    - endpoints: ["dc02-spine-02:eth1", "dc02-leaf-01a:eth2"]
+    - endpoints: ["dc02-spine-03:eth1", "dc02-leaf-01a:eth3"]
+    - endpoints: ["dc02-spine-04:eth1", "dc02-leaf-01a:eth4"]
+    - endpoints: ["dc02-spine-01:eth2", "dc02-leaf-01b:eth1"]
+    - endpoints: ["dc02-spine-02:eth2", "dc02-leaf-01b:eth2"]
+    - endpoints: ["dc02-spine-03:eth2", "dc02-leaf-01b:eth3"]
+    - endpoints: ["dc02-spine-04:eth2", "dc02-leaf-01b:eth4"]
+    # MLAG Pair
+    - endpoints: ["dc02-leaf-02a:eth49", "dc02-leaf-02b:eth49"]
+    - endpoints: ["dc02-leaf-02a:eth50", "dc02-leaf-02b:eth50"]
+    - endpoints: ["dc02-spine-01:eth3", "dc02-leaf-02a:eth1"]
+    - endpoints: ["dc02-spine-02:eth3", "dc02-leaf-02a:eth2"]
+    - endpoints: ["dc02-spine-03:eth3", "dc02-leaf-02a:eth3"]
+    - endpoints: ["dc02-spine-04:eth3", "dc02-leaf-02a:eth4"]
+    - endpoints: ["dc02-spine-01:eth4", "dc02-leaf-02b:eth1"]
+    - endpoints: ["dc02-spine-02:eth4", "dc02-leaf-02b:eth2"]
+    - endpoints: ["dc02-spine-03:eth4", "dc02-leaf-02b:eth3"]
+    - endpoints: ["dc02-spine-04:eth4", "dc02-leaf-02b:eth4"]
+    # MLAG Pair
+    - endpoints: ["dc02-bsl-01a:eth49", "dc02-bsl-01b:eth49"]
+    - endpoints: ["dc02-bsl-01a:eth50", "dc02-bsl-01b:eth50"]
+    - endpoints: ["dc02-spine-01:eth5", "dc02-bsl-01a:eth1"]
+    - endpoints: ["dc02-spine-02:eth5", "dc02-bsl-01a:eth2"]
+    - endpoints: ["dc02-spine-03:eth5", "dc02-bsl-01a:eth3"]
+    - endpoints: ["dc02-spine-04:eth5", "dc02-bsl-01a:eth4"]
+    - endpoints: ["dc02-spine-01:eth6", "dc02-bsl-01b:eth1"]
+    - endpoints: ["dc02-spine-02:eth6", "dc02-bsl-01b:eth2"]
+    - endpoints: ["dc02-spine-03:eth6", "dc02-bsl-01b:eth3"]
+    - endpoints: ["dc02-spine-04:eth6", "dc02-bsl-01b:eth4"]
+    # MLAG Pair
+    - endpoints: ["dc02-leaf-02c:eth49", "dc02-leaf-02d:eth49"]
+    - endpoints: ["dc02-leaf-02c:eth50", "dc02-leaf-02d:eth50"]
+    - endpoints: ["dc02-leaf-02a:eth47", "dc02-leaf-02c:eth47"]
+    - endpoints: ["dc02-leaf-02a:eth48", "dc02-leaf-02d:eth48"]
+    - endpoints: ["dc02-leaf-02b:eth47", "dc02-leaf-02d:eth47"]
+    - endpoints: ["dc02-leaf-02b:eth48", "dc02-leaf-02c:eth48"]
+    # VRF Switches
+    - endpoints: ["dc02-vrf-01:eth1", "dc02-bsl-01a:eth5"]
+    - endpoints: ["dc02-vrf-01:eth2", "dc02-bsl-01b:eth5"]
+    - endpoints: ["dc02-vrf-02:eth1", "dc02-bsl-01b:eth6"]
+    - endpoints: ["dc02-vrf-02:eth2", "dc02-bsl-01a:eth6"]
+    - endpoints: ["dc02-vrf-03:eth1", "dc02-bsl-01b:eth7"]
+    - endpoints: ["dc02-vrf-03:eth2", "dc02-bsl-01a:eth7"]
+    # External Switches
+    - endpoints: ["dc02-ext-01:eth49", "dc02-ext-02:eth49"]
+    - endpoints: ["dc02-ext-01:eth50", "dc02-ext-02:eth50"]
+    - endpoints: ["dc02-ext-01:eth1", "dc02-vrf-01:eth3"]
+    - endpoints: ["dc02-ext-02:eth1", "dc02-vrf-01:eth4"]
+    - endpoints: ["dc02-ext-01:eth2", "dc02-vrf-02:eth3"]
+    - endpoints: ["dc02-ext-02:eth2", "dc02-vrf-02:eth4"]
+    - endpoints: ["dc02-ext-01:eth3", "dc02-vrf-03:eth3"]
+    - endpoints: ["dc02-ext-02:eth3", "dc02-vrf-03:eth4"]
+    # Server Switches
+    - endpoints: ["dc02-ext-03:eth1", "dc02-ext-01:eth4"]
+    - endpoints: ["dc02-ext-03:eth2", "dc02-ext-02:eth4"]
+
+    # DCI
+    # Fabric
+    - endpoints: ["dc01-bsl-01a:eth8", "dc02-bsl-01a:eth8"]
+    - endpoints: ["dc01-bsl-01a:eth9", "dc02-bsl-01b:eth9"]
+    - endpoints: ["dc01-bsl-01b:eth8", "dc02-bsl-01b:eth8"]
+    - endpoints: ["dc01-bsl-01b:eth9", "dc02-bsl-01a:eth9"]
+    # External
+    - endpoints: ["dc01-ext-01:eth5", "dc02-ext-01:eth5"]
+    - endpoints: ["dc01-ext-01:eth6", "dc02-ext-02:eth6"]
+    - endpoints: ["dc01-ext-02:eth5", "dc02-ext-02:eth5"]
+    - endpoints: ["dc01-ext-02:eth6", "dc02-ext-01:eth6"]
